@@ -1,0 +1,32 @@
+# Chemprop MPNN 模型专属配置
+
+model_name: "chemprop"
+
+training:
+  patience: 5
+
+chemprop:
+  # 消息传递神经网络参数
+  hidden_dim: 300           # 隐藏层维度（预训练模型通常为 2048）
+  depth: 3                  # 消息传递层数
+  dropout: 0.1              # Dropout 率
+
+  # 预训练权重路径（null 表示从零开始训练）
+  pretrained_path: null
+
+  # 动态超参数（根据数据集规模）
+  dynamic_params:
+    small:
+      max_samples: 1000
+      batch_size: 16
+      epochs: 50
+      lr: 1.0e-4
+    medium:
+      max_samples: 10000
+      batch_size: 32
+      epochs: 40
+      lr: 5.0e-4
+    large:
+      batch_size: 64
+      epochs: 30
+      lr: 1.0e-3

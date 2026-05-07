@@ -1,0 +1,36 @@
+# Uni-Mol 模型专属配置
+
+model_name: "unimol"
+
+training:
+  patience: 5
+
+unimol:
+  # 冻结底部层数（迁移学习，减少训练参数量）
+  freeze_layers: 6
+
+  # 3D 构象数量（1 = 速度优先；更多构象可能提升精度但显著增加训练时间）
+  conformer_num: 1
+
+  # 是否使用混合精度训练（节省显存，加速训练）
+  use_amp: true
+
+  # DataLoader 工作进程数
+  num_workers: 4
+
+  # 动态超参数（根据数据集规模）
+  dynamic_params:
+    small:
+      max_samples: 1000
+      batch_size: 16
+      epochs: 50
+      lr: 1.0e-4
+    medium:
+      max_samples: 10000
+      batch_size: 32
+      epochs: 40
+      lr: 5.0e-5
+    large:
+      batch_size: 64
+      epochs: 30
+      lr: 1.0e-5

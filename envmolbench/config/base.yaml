@@ -1,0 +1,49 @@
+# ============================================================
+# envmolbench 基础配置文件
+# 所有模型的公共默认值均在此定义。
+# 模型专属 yaml（如 chemberta.yaml）会覆盖对应字段。
+# ============================================================
+
+# ── 路径配置 ──────────────────────────────────────────────────
+paths:
+  datasets_dir: "../datasets"          # 内置数据集根目录（相对于运行目录）
+  results_dir: "../results"            # 模型训练结果输出目录
+  logs_dir: "../logs"                  # 日志文件目录
+
+# ── 通用训练配置 ───────────────────────────────────────────────
+training:
+  seed: 42                             # 全局随机种子
+  split_method: "scaffold"             # 默认数据划分方法
+  test_size: 0.1                       # 测试集比例
+  val_size: 0.1                        # 验证集比例
+  patience: 5                          # 早停耐心值（轮数）
+  weight_decay: 0.01                   # 权重衰减（L2 正则）
+
+# ── 超参数优化配置 ────────────────────────────────────────────
+hyperopt:
+  # 最大 trial 次数（对应原版 DEFAULT_MAX_EVALS=300）
+  max_trials: 300
+
+  # 连续 N 个 trial 无改进则提前终止搜索（对应原版 DEFAULT_HYPEROPT_EARLY_STOP=30）
+  early_stop_trials: 30
+
+  # 整体超时（秒）：整个超参数搜索的最大允许时间
+  # 对应原版 HYPEROPT_TIMEOUT_SECONDS = 360 * 20（2 小时）
+  # Optuna 的 study.optimize(timeout=N) 直接使用此值
+  total_timeout_seconds: 7200          # 2 小时
+
+  # 单次 trial 超时（秒）：单个 trial（含所有 CV 折）的最大允许时间
+  # 对应原版 TRIAL_TIMEOUT_SECONDS = 60 * 10（10 分钟）
+  # 超时后该 trial 返回极差值并继续下一个 trial
+  trial_timeout_seconds: 600           # 10 分钟
+
+  # 早停轮数（XGBoost/CatBoost，对应原版 DEFAULT_EARLY_STOPPING_ROUNDS=50）
+  early_stopping_rounds: 50
+
+  # 早停时的最大迭代次数（对应原版 DEFAULT_N_ESTIMATORS_FOR_EARLY_STOPPING=2000）
+  n_estimators_for_early_stopping: 2000
+
+# ── 日志配置 ──────────────────────────────────────────────────
+logging:
+  level: "INFO"                        # 日志级别（DEBUG/INFO/WARNING/ERROR）
+  log_to_file: true                    # 是否同时写入文件

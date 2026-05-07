@@ -1,0 +1,28 @@
+# GNN / GCN 模型专属配置
+
+model_name: "gnn"
+
+training:
+  patience: 10
+
+gnn:
+  # GNN 架构：'gnn'（支持边特征）或 'gcn'（不含边特征）
+  model_type: "gnn"
+
+  # 隐藏层维度（逐层减半，最小维度 16）
+  hidden_dim: 256
+
+  # GNN 层数
+  num_layers: 3
+
+  # Dropout 率
+  dropout: 0.1
+
+  # 优化器
+  lr: 1.0e-3
+
+  # 批大小
+  batch_size: 32
+
+  # 最大训练轮数
+  max_epochs: 100

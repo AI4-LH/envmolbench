@@ -1,0 +1,40 @@
+# ChemBERTa 模型专属配置
+# 会与 base.yaml 深度合并，此处只写与默认值不同的参数
+
+model_name: "chemberta"
+
+training:
+  patience: 5
+  weight_decay: 0.01
+
+chemberta:
+  # 预训练模型 ID（HuggingFace Hub）
+  # 分类和回归使用不同的预训练模型
+  pretrained_classification: "DeepChem/ChemBERTa-77M-MLM"
+  pretrained_regression: "DeepChem/ChemBERTa-77M-MTR"
+
+  # 线性探针模式：True = 冻结编码器，只训练分类头
+  linear_probe: false
+
+  # SMILES 长度分位数阈值（用于自动选择 max_len）
+  # 第 95 百分位 SMILES 长度落在哪个区间，就选对应的 max_len
+  max_len_thresholds: [64, 128, 256]   # 超过 256 则使用 512
+
+  # 动态超参数（根据数据集规模自动选择）
+  # 格式：[{min, max, batch_size, epochs, lr}, ...]
+  # min/max 为样本数范围（左闭右开）
+  dynamic_params:
+    small:                             # < 1000 样本
+      max_samples: 1000
+      batch_size: 16
+      epochs: 40
+      lr: 1.0e-5
+    medium:                            # 1000 ~ 10000 样本
+      max_samples: 10000
+      batch_size: 32
+      epochs: 30
+      lr: 2.0e-5
+    large:                             # > 10000 样本
+      batch_size: 64
+      epochs: 15
+      lr: 3.0e-5

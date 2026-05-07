@@ -1,0 +1,23 @@
+# CNN 图片模型专属配置
+
+model_name: "cnn"
+
+training:
+  patience: 100              # CNN 训练轮数多，早停耐心值也更大
+
+cnn:
+  # CNN 架构（支持：resnet18 / resnet34 / resnet50 / efficientnet_b0）
+  arch: "resnet18"
+
+  # 分子图片边长（像素）- 224 符合 ImageNet 预训练标准
+  img_size: 224
+
+  # 批大小
+  batch_size: 64
+
+  # 最大训练轮数（配合早停，实际不会跑完）
+  max_epochs: 3000
+
+  # 测试时数据增强次数（TTA）
+  # 5 次 TTA 可提升预测稳定性，但会增加 5 倍推理时间
+  tta_n: 5
